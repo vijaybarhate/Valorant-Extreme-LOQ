@@ -1,0 +1,13 @@
+# Dependency — do not include Ultimate repo files
+# Users must clone Ultimate separately
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/

@@ -1,0 +1,232 @@
+================================================================================
+   MANUAL STEPS — LENOVO LOQ 15IRX9 VALORANT EXTREME
+   Do these AFTER running Run_All_Valorant_Tweaks.cmd and rebooting
+================================================================================
+
+
+================================================================================
+STEP 1: BIOS SETTINGS (Do this FIRST before anything else)
+================================================================================
+
+How to enter BIOS:
+   - Shut down your laptop completely
+   - Press the Novo button (small pinhole button on the left side of the LOQ)
+   - Select "BIOS Setup"
+
+Change these settings:
+
+   Configuration > Intel VMX (Virtualization):  DISABLED
+      → Removes VT-x overhead. Windows uses this even with Hyper-V "off"
+
+   Configuration > Hyper-Threading:  ENABLED
+      → Keep this ON. Our script handles P-Core affinity at the OS level
+
+   Power > Intel SpeedStep:  ENABLED
+      → Keep ON. We want the CPU to boost to max turbo
+
+   Power > Intel Turbo Boost:  ENABLED
+      → Absolutely must be on for max single-core speeds
+
+   Power > CPU C-States:  DISABLED (if available)
+      → Prevents cores from sleeping. Our script does this at OS level too,
+        but BIOS-level is more reliable. Not all LOQ BIOS versions expose this
+
+   Security > Secure Boot:  ENABLED
+      → DO NOT TOUCH. Riot Vanguard REQUIRES this to be ON
+
+   Security > TPM:  ENABLED
+      → DO NOT TOUCH. Riot Vanguard REQUIRES this to be ON
+
+   Press F10 to Save & Exit
+
+
+================================================================================
+STEP 2: LENOVO VANTAGE — SET PERFORMANCE MODE
+================================================================================
+
+After booting into your gaming Windows:
+   1. Open Lenovo Vantage
+   2. Go to "Device" → "Power"
+   3. Set Thermal Mode to "PERFORMANCE" (not balanced, not quiet)
+      → This unlocks ~80W TDP instead of 45W and runs fans at max
+   4. Set Battery Conservation Mode to OFF (keep plugged in while gaming)
+
+   TIP: You can also press Fn + Q to cycle thermal modes. The keyboard
+   backlight color changes: Blue=Quiet, White=Balanced, Red=Performance
+
+
+================================================================================
+STEP 3: INSTALL NVIDIA DRIVERS WITH NVCLEANSTALL
+================================================================================
+
+Download NVCleanstall: https://www.techpowerup.com/nvcleanstall/
+
+   1. Open NVCleanstall
+   2. Select "Use driver files on disk" or let it download latest Game Ready
+   3. On the component selection screen, CHECK ONLY:
+      [x] Display Driver
+      [x] PhysX
+      UNCHECK everything else:
+      [ ] HD Audio via HDMI          (not needed, adds DPC latency)
+      [ ] NVIDIA Broadcast            (background AI processing)
+      [ ] GeForce Experience          (overlay hooks, telemetry)
+      [ ] NV Container / Telemetry    (background processes)
+      [ ] USB-C Driver                (not needed for gaming)
+      [ ] Optimus Display Driver      (we force dGPU via script)
+   4. Click "Tweaks" tab and enable:
+      [x] Disable Installer Telemetry
+      [x] Show Expert Tweaks
+      [x] Disable HDCP (if you don't use Netflix on this OS)
+   5. Install
+
+
+================================================================================
+STEP 4: NVIDIA CONTROL PANEL SETTINGS
+================================================================================
+
+Right-click Desktop → NVIDIA Control Panel
+
+Manage 3D Settings → Global Settings:
+   - Low Latency Mode:               Ultra
+   - Max Frame Rate:                  Off
+   - Monitor Technology:              Fixed Refresh (or G-SYNC if supported)
+   - Multi-Frame Sampled AA (MFAA):   Off
+   - Power Management Mode:           Prefer Maximum Performance
+   - Shader Cache Size:               Unlimited
+   - Texture Filtering - Quality:     High Performance
+   - Threaded Optimization:           On
+   - Triple Buffering:                Off
+   - Vertical Sync:                   Off
+   - Virtual Reality Pre-Rendered:    1
+
+Manage 3D Settings → Program Settings → VALORANT:
+   - Low Latency Mode:               Ultra (override global)
+   - Max Pre-Rendered Frames:         1
+   - Power Management:                Prefer Maximum Performance
+
+Change Resolution:
+   - Set to 1920x1080, 144Hz
+   - Output color depth: 8 bpc
+   - Output color format: RGB
+   - Output dynamic range: Full
+
+Adjust Desktop Size:
+   - Select "No scaling"
+   - Perform scaling on: GPU
+
+
+================================================================================
+STEP 5: NVIDIA PROFILE INSPECTOR (ADVANCED)
+================================================================================
+
+Download: https://github.com/Orbmu2k/nvidiaProfileInspector/releases
+
+   1. Open Nvidia Profile Inspector
+   2. Select "Valorant" from the profile dropdown (or find it)
+   3. Change these:
+      - Frame Rate Limiter:                    Off
+      - Maximum Pre-Rendered Frames:           1
+      - Threaded Optimization:                 0x00000001 (On)
+      - Force P2 State:                        Off
+        → This is THE most important setting. By default NVIDIA downclocks
+          your VRAM from max speed. Force P2 Off keeps VRAM at max
+      - Preferred Refresh Rate:                Highest Available
+      - SILK Smoothness:                       Off
+   4. Click "Apply Changes"
+
+
+================================================================================
+STEP 6: VALORANT IN-GAME SETTINGS
+================================================================================
+
+Video Settings:
+   - Display Mode:          Fullscreen
+   - Resolution:            1920 x 1080
+   - Frame Rate Limit:      Unlocked (or cap at 288 / 2x your refresh)
+   - NVIDIA Reflex Low Latency:  On + Boost
+     → THIS IS THE SINGLE MOST IMPACTFUL SETTING. It synchronizes the
+       CPU render queue with GPU frames, reducing input lag by 10-30ms
+   - Multithreaded Rendering:    On
+   - Material Quality:      Low
+   - Texture Quality:       Low
+   - Detail Quality:        Low
+   - UI Quality:            Low
+   - Vignette:              Off
+   - VSync:                 Off
+   - Anti-Aliasing:         None or MSAA 2x (avoid FXAA — blurs enemies)
+   - Anisotropic Filtering: 1x
+   - Improve Clarity:       Off
+   - Bloom:                 Off
+   - Distortion:            Off
+   - Cast Shadows:          Off
+   - First Person Shadows:  Off
+
+General Settings:
+   - Raw Input Buffer:      On
+     → Bypasses Windows mouse processing completely
+   - Show FPS:              Text Only (minimal overhead)
+
+Audio Settings:
+   - HRTF:                  On (competitive 3D audio for footsteps)
+   - Master Volume:         Match your comfort, but do NOT use "Loudness EQ"
+
+
+================================================================================
+STEP 7: WINDOWS DISPLAY SETTINGS
+================================================================================
+
+   1. Right-click Desktop → Display Settings
+   2. Set refresh rate to 144 Hz (confirm it didn't revert to 60Hz)
+   3. Set HDR to OFF (adds latency)
+   4. Graphics Settings → Hardware-accelerated GPU scheduling → OFF
+      → Controversial, but on RTX 3050 laptop this can cause micro-stutters.
+        Test both on/off and keep whichever gives smoother 1% lows
+
+
+================================================================================
+STEP 8: MOUSE SETTINGS
+================================================================================
+
+   1. Open Windows Settings → Bluetooth & Devices → Mouse
+   2. Set Mouse pointer speed to 6/11 (middle)
+   3. Turn OFF "Enhance pointer precision" (mouse acceleration)
+      → Our script already does this via registry, but double-check
+
+   If you use a USB mouse:
+   - Plug it directly into a USB 3.0 port (blue port)
+   - Avoid USB hubs
+   - Set polling rate to 1000Hz in your mouse software
+   - Our script already disabled USB selective suspend
+
+
+================================================================================
+STEP 9: PHYSICAL LAPTOP SETUP
+================================================================================
+
+   - ALWAYS play plugged in to AC power (never on battery)
+   - Use a laptop cooling pad or elevate the back by 2-3cm
+     → The LOQ's intake vents are on the bottom. Elevation = 5-10°C cooler
+   - Keep the room cool if possible (AC or fan blowing near laptop)
+   - Clean the laptop fans with compressed air every 2-3 months
+   - Close the laptop lid if using an external monitor
+     → Saves iGPU power since it doesn't need to render the laptop screen
+
+
+================================================================================
+STEP 10: NETWORK — USE ETHERNET IF POSSIBLE
+================================================================================
+
+   Wi-Fi adds 2-5ms of latency vs Ethernet. If you can:
+   - Use a USB-C to Ethernet adapter or the built-in RJ45 port
+   - Even a cheap USB 3.0 Gigabit Ethernet adapter is better than Wi-Fi
+
+   If stuck on Wi-Fi:
+   - Sit close to the router
+   - Use 5GHz band (not 2.4GHz)
+   - In router settings, enable QoS and prioritize your laptop's MAC address
+   - Find your MAC address by typing `getmac` in command prompt
+
+
+================================================================================
+DONE! After completing all steps above, your LOQ is an absolute Valorant weapon.
+================================================================================
