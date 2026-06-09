@@ -1,176 +1,144 @@
-# 🎯 Valorant Extreme — Laptop Edition
+# 🎯 Valorant Extreme — Laptop Performance Optimization Suite
 
-> Absolute maximum performance Windows tweaks for playing **Valorant** on a dedicated dual-boot gaming partition.
-> Tailored for the **Lenovo LOQ 15IRX9** (i7-13650HX + RTX 3050 6GB) but adaptable to other Intel 13th/14th Gen hybrid-core gaming laptops.
+Absolute maximum performance Windows scripts and system configurations optimized for playing competitive **Valorant** on a dedicated dual-boot gaming partition. Specifically designed for **Lenovo LOQ** laptops (Intel 13th/14th Gen Hybrid-core + RTX dGPUs) to eliminate micro-stutters and minimize input delay.
 
-![Windows 11](https://img.shields.io/badge/Windows-11-0078D6?logo=windows11&logoColor=white)
-![Valorant](https://img.shields.io/badge/Valorant-Competitive-FF4655?logo=riotgames&logoColor=white)
-![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-5391FE?logo=powershell&logoColor=white)
+> [!CAUTION]
+> **HIGH-RISK CONFIGURATION**: This script strips Windows of Defender, UAC, Firewall, Spectre/Meltdown security mitigations, and disables dozens of core services. **Use this ONLY on a dedicated dual-boot gaming partition.** Do NOT use this operating system for web browsing, banking, or personal files.
 
 ---
 
-## ⚠️ EXTREME WARNING
+## 🖥️ Script Runner Preview
 
-> **This setup strips Windows of Defender, UAC, Firewall, CPU security mitigations (Spectre/Meltdown), and disables dozens of services.**
-> 
-> **Use this ONLY on a dedicated dual-boot gaming partition. DO NOT use this OS for web browsing, banking, or downloading random files.**
+The suite is launched via a unified command file that executes custom powershell tweaks followed by modular performance configurations:
 
----
+```ansi
+==========================================================
+  ABSOLUTE EXTREME VALORANT SETUP (GAMING WINDOWS ONLY)
+==========================================================
+WARNING: This will strip Windows of Defender, UAC, and security
+mitigations to maximize framerates. Do NOT use this OS for
+general web browsing or downloading random files.
 
-## 🖥️ Target Hardware
+Make sure you are running this AS ADMINISTRATOR.
 
-| Component | Specification |
-|---|---|
-| Laptop | Lenovo LOQ 15IRX9 (83DV) |
-| CPU | Intel i7-13650HX (6P + 8E cores, 20 threads) |
-| GPU | NVIDIA GeForce RTX 3050 6GB Laptop |
-| RAM | 24 GB DDR5 |
-| Storage | WD SN740 512GB NVMe |
-| Display | 1920x1080 @ 144Hz |
-| Wi-Fi | Realtek RTL8852BE WiFi 6 |
-| OS | Windows 11 Pro (Dual-boot gaming partition) |
+Press any key to continue . . .
 
----
+[*] Running Custom Extreme Laptop Tweaks (P-Cores, Nagle, HPET, MMCSS, Visuals)...
+    -> Binding Valorant (VALORANT-Win64-Shipping.exe) to P-Core Mask: 0xFFF
+    -> Setting TCP NoDelay (Nagle's Algorithm): ENABLED
+    -> Disabling HPET and Dynamic Ticks: COMPLETED
+    -> Whi-Fi IRQ bound to dedicated P-Core 2: COMPLETED
+    -> NVIDIA PowerMizer force max clocks: COMPLETED
 
-## 📦 What's Included
+[*] Applying Ultimate Power Plan...
+    -> Ultimate Performance Plan imported and set active.
 
-| File | Description |
-|---|---|
-| `Laptop_Valorant_Extreme.ps1` | Custom PowerShell script with **30 deep system tweaks** |
-| `Run_All_Valorant_Tweaks.cmd` | Master batch runner — executes the custom script + 17 standard Ultimate scripts |
-| `MANUAL_STEPS_VALORANT.txt` | 10-step manual guide for BIOS, NVIDIA Control Panel, Valorant settings, etc. |
+[*] Applying Timer Resolution Fix...
+    -> System clock resolution forced to 0.50ms.
 
----
-
-## 🔧 Prerequisites
-
-This project works **alongside** the [Ultimate](https://github.com/FR33THYFR33THY/Ultimate) Windows optimization repo by FR33THYFR33THY. You need to clone it first.
-
-```powershell
-# 1. Clone the Ultimate repo
-git clone https://github.com/FR33THYFR33THY/Ultimate.git
-
-# 2. Copy THIS repo's files INTO the Ultimate folder
-# Place Laptop_Valorant_Extreme.ps1, Run_All_Valorant_Tweaks.cmd,
-# and MANUAL_STEPS_VALORANT.txt into the root of the Ultimate folder
+[*] Removing Windows Defender...
+    -> AntiMalware services and filters permanently bypassed.
 ```
 
 ---
 
-## 🚀 Usage
+## ✨ Features
 
-1. **Clone Ultimate repo** and place these files inside it
-2. Copy the entire folder to your **gaming partition** (USB drive or shared drive)
-3. Boot into your **dedicated gaming Windows**
-4. Right-click `Run_All_Valorant_Tweaks.cmd` → **Run as Administrator**
-5. Wait for all scripts to complete
-6. **Reboot**
-7. Open `MANUAL_STEPS_VALORANT.txt` and follow the 10 manual steps
-
----
-
-## 📋 Custom Script Tweaks (30 Total)
-
-### Phase 1: Hardware & Network
-
-| # | Tweak | Impact |
-|---|---|---|
-| 1 | Disable Nahimic Audio Services | Fixes DPC latency / crashes |
-| 2 | Valorant P-Core affinity (0xFFF) | Game runs on 6 fast P-Cores only |
-| 3 | Valorant High Priority (IFEO) | CPU prioritizes game threads |
-| 4 | Preserve Lenovo Vantage/IPF | Keeps laptop fan control alive |
-| 5 | Disable Nagle's Algorithm | Instant packet delivery (lower ping) |
-| 6 | MMCSS SystemResponsiveness=0 | 100% CPU time to foreground game |
-| 7 | HPET + Dynamic Ticks off | Use CPU internal TSC timer |
-| 8 | Visual Effects purge | Remove DWM rendering overhead |
-| 9 | MSI Mode for RTX 3050 | Biggest single DPC latency fix |
-| 10 | NIC: Interrupt Mod + LSO off | Lower network interrupt latency |
-| 11 | BCD: platformtick + tscsync | Better multi-core timer sync |
-| 12 | Force dGPU for Valorant | Bypass Intel iGPU completely |
-| 13 | Disable Windows Update + BITS | No background downloads mid-game |
-| 14 | Fixed 8GB Pagefile | No mid-game resize stutters |
-| 15 | DNS → Cloudflare 1.1.1.1 | Faster server lookups |
-| 16 | NVIDIA Telemetry off | Remove overlay input lag |
-
-### Phase 2: Kernel & Deep System
-
-| # | Tweak | Impact |
-|---|---|---|
-| 17 | Kernel paging executive off | Lock kernel + drivers in RAM |
-| 18 | Prefetch + SysMain off | Stop background disk prediction |
-| 19 | C-State floor (100% clocks) | CPU never sleeps mid-frame |
-| 20 | Win32PrioritySeparation 0x28 | Long quanta, max foreground boost |
-| 21 | GPU IRQ → P-Core 0 | GPU interrupts on fastest core |
-| 22 | Wi-Fi IRQ → P-Core 2 | Network interrupts on dedicated core |
-| 23 | TCP stack: autotuning/ECN off | Minimum network stack overhead |
-| 24 | NTFS: last-access, 8.3 off | Reduce disk I/O overhead |
-| 25 | NVIDIA PowerMizer off | Force max GPU clocks always |
-| 26 | Error Reporting + DiagTrack off | Kill diagnostics overhead |
-| 27 | Delivery Optimization off | No P2P update sharing |
-| 28 | Telemetry registry = 0 | Security-only telemetry level |
-| 29 | Windows Search Indexer off | No background disk scanning |
-| 30 | Print Spooler off | Not needed for gaming |
+* **P-Core Affinity Binding**: Restricts Valorant to P-Cores (Physical Performance Cores) only, preventing the Windows scheduler from moving critical game loops to E-Cores (Efficiency Cores), resolving framerate drops.
+* **IRQ Core Mapping**: Maps Wi-Fi and GPU interrupt requests (IRQs) to specific, dedicated P-Cores to prevent CPU core sharing bottlenecks.
+* **MMCSS Prioritization**: Reconfigures the Multimedia Class Scheduler Service (MMCSS) to dedicate 100% CPU priority to the active game.
+* **Nagle's Algorithm Overrides**: Forces instant TCP packet delivery (`TcpAckFrequency` & `TCPNoDelay`) to lower in-game ping.
+* **DPC Latency Minimization**: Enforces Message Signaled Interrupts (MSI Mode) on the NVIDIA graphics card, preventing frame stuttering.
+* **Thermal Curve Protection**: Whitelists critical Lenovo Vantage and power services from service stripping to preserve fan control curves.
+* **System Fat Stripping**: Disables Telemetry, Windows Update, Search Indexer, Error Reporting, Gamebar DVR, Core Isolation (VBS/HVCI), and CPU Meltdown/Spectre mitigations.
 
 ---
 
-## 📋 Ultimate Scripts Executed (17 Total)
+## 🏗️ Core Optimization Flow
 
-| Order | Script | Purpose |
-|---|---|---|
-| 1 | `6 Windows\29 Power Plan.ps1` | Ultimate Performance power plan |
-| 2 | `6 Windows\30 Timer Resolution.ps1` | Fix Windows timer to 0.5ms |
-| 3 | `8 Advanced\12 Hardware Legacy Flip.ps1` | Optimize fullscreen/borderless |
-| 4 | `8 Advanced\2 Firewall.ps1` | Disable Windows Firewall |
-| 5 | `8 Advanced\11 Mpo.ps1` | Disable Multi-Plane Overlay |
-| 6 | `3 Setup\2 Memory Compression.ps1` | Stop CPU RAM decompression |
-| 7 | `6 Windows\19 Gamebar.ps1` | Kill Xbox Game Bar/DVR |
-| 8 | `8 Advanced\32 Core Isolation.ps1` | Disable VBS/HVCI |
-| 9 | `8 Advanced\10 Priority.ps1` | Foreground process priority |
-| 10 | `8 Advanced\1 Defender.ps1` | Remove Windows Defender |
-| 11 | `8 Advanced\3 Spectre Meltdown.ps1` | Disable CPU security mitigations |
-| 12 | `6 Windows\25 Device Mgr Power.ps1` | Strip HW power savings |
-| 13 | `6 Windows\31 UAC.ps1` | Disable UAC |
-| 14 | `8 Advanced\17 Services.ps1` | Massive services destruction |
-| 15 | `6 Windows\26 NIC Power Savings.ps1` | NIC power management off |
-| 16 | `6 Windows\27 IPv4 Only.ps1` | Force IPv4, disable IPv6 |
-
----
-
-## 📖 Manual Steps (Post-Script)
-
-After running the scripts and rebooting, open `MANUAL_STEPS_VALORANT.txt` for:
-
-1. **BIOS Settings** — Disable VT-x, enable Turbo Boost, disable C-States
-2. **Lenovo Vantage** — Set Performance thermal mode (Fn+Q)
-3. **NVCleanstall** — Install stripped NVIDIA drivers
-4. **NVIDIA Control Panel** — Low Latency Ultra, Max Performance, Shader Cache Unlimited
-5. **NVIDIA Profile Inspector** — Force P2 State Off, Pre-Rendered Frames = 1
-6. **Valorant In-Game** — NVIDIA Reflex On+Boost, Raw Input Buffer On, all visuals Low
-7. **Windows Display** — Confirm 144Hz, HDR Off
-8. **Mouse Settings** — 6/11, no acceleration, 1000Hz polling
-9. **Physical Setup** — Always plugged in, cooling pad, clean vents
-10. **Network** — Use Ethernet if possible, or 5GHz Wi-Fi
+```mermaid
+graph TD
+    Launcher[Run_All_Valorant_Tweaks.cmd]
+    --> PS[Laptop_Valorant_Extreme.ps1]
+    
+    subgraph CPU Optimization
+        PS -->|Bind Affinity Mask| PCore["Physical P-Cores Only (Exclude E-Cores)"]
+        PS -->|Thread priority| MMCSS["Set High System Responsiveness"]
+    end
+    
+    subgraph Network Tuning
+        PS -->|Disable Delay| Nagle["Nagle's TCP Stack Bypass"]
+        PS -->|Map Interrupts| IRQ["Wi-Fi IRQ -> P-Core 2"]
+    end
+    
+    subgraph Security Purge
+        PS -->|Bypass Overhead| Def["Remove Defender & Mitigations"]
+        PS -->|Lock Core Clocks| GPU["NVIDIA PowerMizer Max Performance"]
+    end
+    
+    PCore --> Reboot
+    MMCSS --> Reboot
+    Nagle --> Reboot
+    IRQ --> Reboot
+    Def --> Reboot
+    GPU --> Reboot
+    Reboot([Reboot System])
+```
 
 ---
 
-## 🔄 Adapting for Other Laptops
-
-If you have a different laptop, you'll need to modify:
-
-- **P-Core affinity mask** in tweak #2 — calculate based on your CPU's P-Core/E-Core layout
-- **Vital services list** in tweak #4 — change to your manufacturer's thermal services
-- **Wi-Fi IRQ grep** in tweak #22 — change the adapter name pattern
-- **BIOS steps** in the manual guide — vary by manufacturer
-
----
-
-## 📝 Credits
-
-- **[Ultimate](https://github.com/FR33THYFR33THY/Ultimate)** by FR33THYFR33THY — The base Windows optimization scripts
-- **Custom laptop adaptations** — Tailored for Lenovo LOQ + Valorant by this project
+## 🛠️ Target Hardware Specs (Reference)
+* **CPU**: Intel i7-13650HX (6 P-Cores + 8 E-Cores, 20 threads)
+* **GPU**: NVIDIA GeForce RTX 3050 6GB Laptop Edition
+* **RAM**: 24 GB DDR5 @ 4800MHz
+* **Storage**: NVMe PCIe Gen4 SSD
+* **Display**: 1920x1080 @ 144Hz Refresh Rate
+* **OS**: Windows 11 Pro (Dedicated Gaming Partition)
 
 ---
 
-## 📄 License
+## 📦 How to Apply
 
-This project is provided as-is for educational purposes. Use at your own risk. The author is not responsible for any hardware damage, system instability, or account bans.
+### Prerequisites
+This project runs alongside the **[Ultimate](https://github.com/FR33THYFR33THY/Ultimate)** optimization repository by FR33THYFR33THY. 
+
+### Step-by-Step Installation
+
+1. **Clone the Ultimate Base Repo**:
+   ```bash
+   git clone https://github.com/FR33THYFR33THY/Ultimate.git
+   ```
+
+2. **Clone this Repository & Integrate**:
+   Copy all files from this project (`Laptop_Valorant_Extreme.ps1`, `Run_All_Valorant_Tweaks.cmd`, and `MANUAL_STEPS_VALORANT.txt`) directly into the root folder of the cloned `Ultimate` directory.
+
+3. **Execute the Suite**:
+   * Boot into your **dedicated gaming Windows partition**.
+   * Right-click `Run_All_Valorant_Tweaks.cmd` and select **Run as Administrator**.
+   * Wait for the console execution pipeline to apply all tweaks.
+   * **Reboot the system**.
+
+4. **Complete Manual Customizations**:
+   Open `MANUAL_STEPS_VALORANT.txt` and follow the guidelines to disable virtualization (VT-x/C-States) in the BIOS, optimize NVIDIA Control Panel parameters, and tweak in-game audio/video overlays.
+
+---
+
+## 🧠 Challenges Faced
+
+* **Preserving Laptop Fan Control**: Disabling generic Windows Services frequently terminates manufacturer thermal services. On Lenovo laptops, killing Lenovo Vantage and Intelligent Cooling services locks fans to their lowest speed, causing instant thermal throttling. We solved this by creating a whitelisting regex filter in our service-stripping loops, preserving `LenovoVantageService` and `ImControllerService`.
+* **Calculating P-Core Masks**: Intel's hybrid architecture varies by CPU SKU. A static core affinity mask can freeze games on models with different core counts. We documented how to calculate custom binary affinity masks (e.g. `0xFFF` for 6 P-Cores) so users with different CPU topologies can adapt the script safely.
+* **Network Driver Reset Loops**: Stripping IPv6 and adjusting TCP registry values can cause Realtek NIC drivers to trigger reset loops. We resolved this by explicitly disabling NIC power management wake states and interrupt moderation parameters via PowerShell before applying registry overrides.
+
+---
+
+## 🔮 Future Improvements
+
+- [ ] **Dynamic CPU Profiler**: Automatically detect CPU topologies at runtime and compute optimal P-Core affinity masks dynamically.
+- [ ] **Ryzen 3D V-Cache Mapping**: Support core parking configurations for AMD Ryzen processors.
+- [ ] **Automatic Restore Point**: Automatically capture a full system restore point before applying overrides.
+
+---
+
+## 📄 Credits
+* Base scripts framework: **[Ultimate Windows Optimization](https://github.com/FR33THYFR33THY/Ultimate)** by FR33THYFR33THY.
+* Custom hybrid core mappings and Lenovo hardware integrations designed by Vijay Barhate.
